@@ -1,5 +1,5 @@
 -- =====================================================
--- ULTRA BETA 2026 — PREMIUM v5
+-- ULTRA BETA 2026 — PREMIUM v6 (FIXED)
 -- SkilerBost Premium Edition
 -- =====================================================
 
@@ -49,6 +49,26 @@ local HasClick = pcall(function() return mouse1click end)
 local HasHook  = pcall(function() return hookmetamethod end) and typeof(hookmetamethod) == "function"
 local HasNewCC = pcall(function() return newcclosure end)
 
+-- ════ КОНФИГ (СОЗДАЁМ ПЕРВЫМ!) ════
+local C = {
+    Aim     = {On=false,Part="Head",FOV=200,Smooth=6,Team=false,Mode="Hold",Pred=0.12,ShowFOV=true},
+    Silent  = {On=false,Part="Head"},
+    Trigger = {On=false,Delay=50},
+    ESP     = {On=false,Box=true,Name=true,HP=true,Dist=true,Tracers=false,Team=false,Max=2500},
+    HB      = {On=false,Size=15,Vis=true},
+    Cross   = {On=false,Size=12},
+    Gun     = {RapidFire=false,RapidSpeed=30,AutoFire=false},
+    WS      = {On=false,Val=16},
+    JP      = {On=false,Val=50},
+    NF=false, IJ=false, NC=false,
+    BHop    = {On=false},
+    Fly     = {On=false,Sp=50},
+    WM      = {On=true},
+    MenuOpen = true
+}
+
+local SilentTarget = nil
+
 -- ════ FOV CIRCLE ════
 local FOVCircle = nil
 if DrawOK then
@@ -80,8 +100,7 @@ if DrawOK then
     end)
 end
 
--- ════ TRACERS ════
-local TracerLines = {} -- [plr] = Drawing.Line
+local TracerLines = {}
 
 -- ════ ЗАСТАВКА ════
 local BootGui = Instance.new("ScreenGui")
@@ -139,13 +158,12 @@ SubLbl.TextColor3 = C3RGB(140,140,175)
 SubLbl.TextSize = 15
 SubLbl.Font = Enum.Font.GothamMedium
 
--- Вычисления
 local Calcs = {
-    "0xDEADC0DE","∑(n²)","∫f(x)dx","lim→∞","Δt=0.016",
-    "hookmetamethod","getgc()","math.huge","√256","sin(π)",
+    "0xDEADC0DE","sum(n)","integral","lim infinity","Delta t=0.016",
+    "hookmetamethod","getgc()","math.huge","sqrt(256)","sin(pi)",
     "RSA-2048","AES-256","Vector3.new","CFrame.new",
     "FireServer()","Matrix4x4","newcclosure","readfile()",
-    "writefile()","∇f(x,y)","0b10101","Quaternion"
+    "writefile()","gradient","0b10101","Quaternion"
 }
 
 task.spawn(function()
@@ -166,16 +184,15 @@ task.spawn(function()
     end
 end)
 
--- Факты
 local Facts = {
-    "🎯 Loading aimbot engine...",
-    "🛡️ Anti-detect protocols...",
-    "👁️ Preparing ESP system...",
-    "💀 Building hitbox overlay...",
-    "⚡ SkilerBost ULTRA BETA...",
-    "🔑 Verifying license...",
-    "🐰 Bunny hop initialized...",
-    "📌 Crosshair ready..."
+    "Loading aimbot engine...",
+    "Anti-detect protocols...",
+    "Preparing ESP system...",
+    "Building hitbox overlay...",
+    "SkilerBost ULTRA BETA...",
+    "Verifying license...",
+    "Bunny hop initialized...",
+    "Crosshair ready..."
 }
 local FactLbl = Instance.new("TextLabel", Bg)
 FactLbl.Size = UD2(1,0,0,25)
@@ -225,7 +242,7 @@ task.wait(3.6)
 
 TitleLbl.Text = "LANGUAGE"
 TitleLbl.TextSize = 42
-SubLbl.Text = "Русский / English"
+SubLbl.Text = "Russian / English"
 BarBg.Visible = false
 FactLbl.Visible = false
 R1.Visible = false; R2.Visible = false; R3.Visible = false
@@ -240,7 +257,7 @@ local function MakeLangBtn(text, posX)
     return b
 end
 
-local BtnRu = MakeLangBtn("RU Русский", -205)
+local BtnRu = MakeLangBtn("RU Russian", -205)
 local BtnEn = MakeLangBtn("EN English", 10)
 
 local Lang = nil
@@ -253,10 +270,9 @@ TweenService:Create(Bg,TweenInfo.new(0.4),{BackgroundTransparency=1}):Play()
 task.wait(0.5)
 BootGui:Destroy()
 
--- ════ КЛЮЧИ (200 + OWNER) ════
+-- ════ КЛЮЧИ ════
 local ValidKeys = {}
 for i=1,200 do ValidKeys[string.format("ULTRA-BETA-%04d-2026",i)] = true end
--- Твой личный ключ OWNER
 ValidKeys["ULTRA-OWNER-SKILER-2026"] = true
 
 local KeyFile = "ULTRA_BETA_KEY.txt"
@@ -285,7 +301,7 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     local D1=Instance.new("TextLabel",Panel)
     D1.Size=UD2(1,-30,0,50); D1.Position=UD2(0,15,0,70)
     D1.BackgroundTransparency=1
-    D1.Text=Lang=="ru" and "Введите ключ\nULTRA-BETA-XXXX-2026" or "Enter key\nULTRA-BETA-XXXX-2026"
+    D1.Text=Lang=="ru" and "Vvedite klyuch\nULTRA-BETA-XXXX-2026" or "Enter key\nULTRA-BETA-XXXX-2026"
     D1.TextColor3=C3RGB(140,140,170); D1.TextSize=12; D1.Font=Enum.Font.Gotham; D1.TextWrapped=true
 
     local IBox=Instance.new("Frame",Panel)
@@ -304,7 +320,7 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     ABtn.Size=UD2(1,-40,0,42); ABtn.Position=UD2(0,20,0,195)
     ABtn.BackgroundColor3=C3RGB(0,120,255); ABtn.TextColor3=C3(1,1,1)
     ABtn.Font=Enum.Font.GothamBold; ABtn.TextSize=15
-    ABtn.Text=Lang=="ru" and "АКТИВИРОВАТЬ" or "ACTIVATE"; ABtn.BorderSizePixel=0
+    ABtn.Text=Lang=="ru" and "AKTIVIROVAT" or "ACTIVATE"; ABtn.BorderSizePixel=0
     Instance.new("UICorner",ABtn).CornerRadius=UDim.new(0,8)
 
     local Stat=Instance.new("TextLabel",Panel)
@@ -319,7 +335,7 @@ if not (SavedKey and ValidKeys[SavedKey]) then
             pcall(function() if writefile then writefile(KeyFile,k) end end)
             task.wait(0.6); Ok=true
         else
-            Stat.Text=Lang=="ru" and "Неверный ключ" or "Invalid key"
+            Stat.Text=Lang=="ru" and "Nevernyy klyuch" or "Invalid key"
             Stat.TextColor3=C3RGB(255,80,80)
         end
     end)
@@ -328,16 +344,15 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     KGui:Destroy()
 end
 
--- ════ АНТИДЕТЕКТ ════
-local SilentTarget = nil
-
+-- ════ АНТИДЕТЕКТ + SILENT AIM (С ЗАЩИТОЙ ОТ ОШИБОК) ════
 if HasHook then
     pcall(function()
         local wrap = HasNewCC and newcclosure or function(f) return f end
 
         local OldIndex
         OldIndex = hookmetamethod(game,"__index",wrap(function(self,key)
-            if C.Silent.On and SilentTarget and self == Mouse then
+            -- ВАЖНО: проверяем что C существует
+            if C and C.Silent and C.Silent.On and SilentTarget and SilentTarget.Parent and self == Mouse then
                 if key == "Hit" then return SilentTarget.CFrame end
                 if key == "Target" then return SilentTarget end
             end
@@ -352,7 +367,7 @@ if HasHook then
 
         local OldNamecall
         OldNamecall = hookmetamethod(game,"__namecall",wrap(function(self,...)
-            if C.Silent.On and SilentTarget then
+            if C and C.Silent and C.Silent.On and SilentTarget and SilentTarget.Parent then
                 local method = getnamecallmethod()
                 if method=="FireServer" or method=="InvokeServer" then
                     local args={...}
@@ -371,25 +386,7 @@ if HasHook then
     end)
 end
 
--- ════ КОНФИГ ════
-local C = {
-    Aim     = {On=false,Part="Head",FOV=200,Smooth=6,Team=false,Mode="Hold",Pred=0.12,ShowFOV=true},
-    Silent  = {On=false,Part="Head"},
-    Trigger = {On=false,Delay=50},  -- НОВОЕ
-    ESP     = {On=false,Box=true,Name=true,HP=true,Dist=true,Tracers=false,Team=false,Max=2500},
-    HB      = {On=false,Size=15,Vis=true},
-    Cross   = {On=false,Size=12,Color={255,50,50}},  -- НОВОЕ
-    Gun     = {RapidFire=false,RapidSpeed=30,AutoFire=false},
-    WS      = {On=false,Val=16},
-    JP      = {On=false,Val=50},
-    NF=false, IJ=false, NC=false,
-    BHop    = {On=false},  -- НОВОЕ
-    Fly     = {On=false,Sp=50},
-    WM      = {On=true},  -- Watermark
-    MenuOpen = true
-}
-
--- ════ СОХРАНЕНИЕ НАСТРОЕК ════
+-- ════ СОХРАНЕНИЕ ════
 local CFG_FILE = "ULTRA_CONFIG.txt"
 
 local function SaveConfig()
@@ -406,12 +403,9 @@ local function LoadConfig()
         if readfile and isfile and isfile(CFG_FILE) then
             local data = readfile(CFG_FILE)
             local loaded = HttpService:JSONDecode(data)
-            -- Merge loaded into C
             for k,v in pairs(loaded) do
-                if type(v) == "table" then
-                    if C[k] and type(C[k]) == "table" then
-                        for k2,v2 in pairs(v) do C[k][k2] = v2 end
-                    end
+                if type(v) == "table" and C[k] and type(C[k]) == "table" then
+                    for k2,v2 in pairs(v) do C[k][k2] = v2 end
                 else
                     C[k] = v
                 end
@@ -431,13 +425,6 @@ local function RebuildCache()
     end
 end
 RebuildCache()
-Players.PlayerAdded:Connect(RebuildCache)
-Players.PlayerRemoving:Connect(function(plr)
-    RebuildCache()
-    RemoveESP(plr)
-    RestoreHB(plr)
-    if TracerLines[plr] then pcall(function() TracerLines[plr]:Remove() end); TracerLines[plr]=nil end
-end)
 
 -- ════ HELPERS ════
 local function GetPart(char, partName)
@@ -478,13 +465,13 @@ local function GetClosest(fov, partName)
             end
         end
     end
-    return best, bestD
+    return best
 end
 
 -- ════ ХИТБОКСЫ ════
 local HBData = {}
 
-function RestoreHB(plr)
+local function RestoreHB(plr)
     local d = HBData[plr]
     if d and d.head and d.head.Parent then
         pcall(function()
@@ -517,7 +504,7 @@ end
 -- ════ ESP ════
 local ESPCache = {}
 
-function RemoveESP(plr)
+local function RemoveESP(plr)
     local d = ESPCache[plr]
     if d then
         pcall(function() if d.hl then d.hl:Destroy() end end)
@@ -530,7 +517,7 @@ local function CleanESP()
     for plr,_ in pairs(ESPCache) do RemoveESP(plr) end
 end
 
-function CreateESP(plr)
+local function CreateESP(plr)
     if plr==LP then return end; RemoveESP(plr)
     local ch=plr.Character; if not ch then return end
     local hum=ch:FindFirstChildOfClass("Humanoid")
@@ -581,13 +568,19 @@ function CreateESP(plr)
     ESPCache[plr]=data
 end
 
--- Подключения
 Players.PlayerAdded:Connect(function(plr)
+    RebuildCache()
     plr.CharacterAdded:Connect(function()
         task.wait(1)
         if C.ESP.On then CreateESP(plr) end
         if C.HB.On then ApplyHB(plr) end
     end)
+end)
+Players.PlayerRemoving:Connect(function(plr)
+    RebuildCache()
+    RemoveESP(plr)
+    RestoreHB(plr)
+    if TracerLines[plr] then pcall(function() TracerLines[plr]:Remove() end); TracerLines[plr]=nil end
 end)
 for _,plr in ipairs(Players:GetPlayers()) do
     if plr~=LP then
@@ -642,7 +635,6 @@ local function StartRapid()
 end
 local function StopRapid() RapidOn=false end
 
--- ════ FLY ════
 local FBV, FBG
 local function DoFly(on)
     pcall(function()
@@ -675,11 +667,10 @@ WMLbl.BorderSizePixel = 0
 WMLbl.TextColor3 = C3RGB(0,200,255)
 WMLbl.TextSize = 11
 WMLbl.Font = Enum.Font.GothamBold
-WMLbl.Text = "ULTRA BETA 2026 | SkilerBost | "..LP.DisplayName
+WMLbl.Text = "ULTRA BETA 2026 | "..LP.DisplayName
 Instance.new("UICorner", WMLbl).CornerRadius = UDim.new(0,6)
 Instance.new("UIStroke", WMLbl).Color = C3RGB(0,100,180)
 
--- FPS в watermark
 task.spawn(function()
     while WMGui.Parent do
         local fps = mFloor(1/RunService.Heartbeat:Wait())
@@ -688,12 +679,11 @@ task.spawn(function()
     end
 end)
 
--- ════ ГЛАВНЫЕ ЦИКЛЫ ════
+-- ════ ЦИКЛЫ ════
 local AimActive = false
-local HBTimer, NCTimer = 0, 0
+local HBTimer, NCTimer, TrigTimer = 0, 0, 0
 
 RunService.Heartbeat:Connect(function(dt)
-    -- Fly
     if C.Fly.On and FBV and FBG and Cam then
         local mv=Vector3.zero
         if UserInputService:IsKeyDown(Enum.KeyCode.W) then mv=mv+Cam.CFrame.LookVector end
@@ -712,14 +702,10 @@ RunService.Heartbeat:Connect(function(dt)
             if C.WS.On then hum.WalkSpeed=C.WS.Val end
             if C.JP.On then hum.JumpPower=C.JP.Val end
             if C.NF then hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown,false); hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,false) end
-
-            -- Bunny Hop
             if C.BHop.On and hum.FloorMaterial ~= Enum.Material.Air then
                 hum:ChangeState(Enum.HumanoidStateType.Jumping)
             end
         end
-
-        -- NoClip
         if C.NC then
             NCTimer=NCTimer+dt
             if NCTimer>0.3 then NCTimer=0
@@ -728,7 +714,6 @@ RunService.Heartbeat:Connect(function(dt)
         end
     end
 
-    -- HB update
     if C.HB.On then
         HBTimer=HBTimer+dt
         if HBTimer>0.2 then HBTimer=0
@@ -748,17 +733,22 @@ RunService.Heartbeat:Connect(function(dt)
     end
 
     -- Trigger Bot
-    if C.Trigger.On and Mouse.Target then
-        local target = Mouse.Target
-        local parent = target.Parent
-        if parent then
-            local hum = parent:FindFirstChildOfClass("Humanoid")
-            if hum and hum.Health > 0 then
-                -- Проверяем что это враг
-                local plr = Players:GetPlayerFromCharacter(parent)
-                if plr and plr ~= LP then
-                    if not (C.Aim.Team and LP.Team and plr.Team == LP.Team) then
-                        DoFire()
+    if C.Trigger.On then
+        TrigTimer = TrigTimer + dt
+        if TrigTimer > (C.Trigger.Delay/1000) then
+            TrigTimer = 0
+            local target = Mouse.Target
+            if target then
+                local parent = target.Parent
+                if parent then
+                    local hum = parent:FindFirstChildOfClass("Humanoid")
+                    if hum and hum.Health > 0 then
+                        local plr = Players:GetPlayerFromCharacter(parent)
+                        if plr and plr ~= LP then
+                            if not (C.Aim.Team and LP.Team and plr.Team == LP.Team) then
+                                DoFire()
+                            end
+                        end
                     end
                 end
             end
@@ -766,7 +756,6 @@ RunService.Heartbeat:Connect(function(dt)
     end
 end)
 
--- HB apply
 task.spawn(function()
     while task.wait(1.5) do
         if C.HB.On then
@@ -775,7 +764,6 @@ task.spawn(function()
     end
 end)
 
--- Silent Target
 task.spawn(function()
     while true do
         if C.Silent.On then SilentTarget=GetClosest(C.Aim.FOV,C.Silent.Part)
@@ -784,11 +772,9 @@ task.spawn(function()
     end
 end)
 
--- RenderStepped
 RunService.RenderStepped:Connect(function()
     Cam=Workspace.CurrentCamera; if not Cam then return end
 
-    -- FOV Circle
     if FOVCircle then
         if (C.Aim.On or C.Silent.On) and C.Aim.ShowFOV then
             FOVCircle.Visible=true; FOVCircle.Radius=C.Aim.FOV
@@ -796,7 +782,6 @@ RunService.RenderStepped:Connect(function()
         else FOVCircle.Visible=false end
     end
 
-    -- Crosshair
     if CrossH and CrossV then
         if C.Cross.On then
             local cx=Cam.ViewportSize.X*0.5
@@ -805,12 +790,9 @@ RunService.RenderStepped:Connect(function()
             CrossH.Visible=true; CrossV.Visible=true
             CrossH.From=V2(cx-s,cy); CrossH.To=V2(cx+s,cy)
             CrossV.From=V2(cx,cy-s); CrossV.To=V2(cx,cy+s)
-            CrossH.Color=C3RGB(C.Cross.Color[1],C.Cross.Color[2],C.Cross.Color[3])
-            CrossV.Color=CrossH.Color
         else CrossH.Visible=false; CrossV.Visible=false end
     end
 
-    -- Aimbot
     if C.Aim.On and (C.Aim.Mode=="Always" or AimActive) then
         local best=GetClosest(C.Aim.FOV,C.Aim.Part)
         if best then
@@ -824,7 +806,6 @@ RunService.RenderStepped:Connect(function()
         end
     end
 
-    -- Tracers
     if DrawOK and C.ESP.On and C.ESP.Tracers then
         local bottom = V2(Cam.ViewportSize.X*0.5, Cam.ViewportSize.Y)
         for i=1,#PCache do
@@ -858,7 +839,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- ESP update
 task.spawn(function()
     while true do
         if C.ESP.On then
@@ -903,7 +883,6 @@ task.spawn(function()
     end
 end)
 
--- INPUT
 UserInputService.InputBegan:Connect(function(i,gpe)
     if gpe then return end
     if i.UserInputType==Enum.UserInputType.MouseButton2 then
@@ -933,26 +912,26 @@ local TH={
 }
 
 local L=Lang=="ru" and {
-    tabs={"Боевой","Оружие","Визуал","Движение","Доп","Инфо"},
-    aimOn="Аимбот",aMode="Режим",aPart="Часть",aFOV="FOV",aSmooth="Плавность",aPred="Предсказание",
-    aFovC="Круг FOV",aTeam="Команда",silOn="Silent Aim",silPart="Часть Silent",
-    trigOn="Trigger Bot (авто-стрельба)",trigDelay="Задержка (мс)",
-    hbOn="Хитбокс головы",hbSz="Размер",hbVis="Красный",
-    espOn="Включить ESP",espBox="Обводка",espName="Имя",espHP="HP",espDist="Дистанция",
-    espTracers="Трейсеры (линии к врагам)",espMax="Макс. дистанция",
-    fb="Полная яркость",crossOn="Прицел (Crosshair)",crossSz="Размер прицела",
-    wsOn="WalkSpeed",wsVal="Значение",jpOn="JumpPower",jpVal="Значение",
-    nf="Без урона",ij="Беск. прыжок",nc="NoClip",bhop="Bunny Hop (авто-прыжки)",
-    flyOn="Полёт",flySp="Скорость",
-    gRap="Rapid Fire",gAuto="Auto Fire",gSpd="Скорость (мс)",gTest="Тест",
-    wmOn="Watermark (бренд на экране)",
-    tpSec="ТЕЛЕПОРТ",tpPlayer="Телепорт к игроку ▼",
-    save="💾 Сохранить настройки",unload="Выгрузить",rejoin="Перезайти"
+    tabs={"Boevoy","Oruzhie","Vizual","Dvizhenie","Dop","Info"},
+    aimOn="Aimbot",aMode="Rezhim",aPart="Chast",aFOV="FOV",aSmooth="Plavnost",aPred="Predskazanie",
+    aFovC="Krug FOV",aTeam="Komanda",silOn="Silent Aim",silPart="Chast Silent",
+    trigOn="Trigger Bot (avto-strelba)",
+    hbOn="Khitboks golovy",hbSz="Razmer",hbVis="Krasnyy",
+    espOn="Vklyuchit ESP",espBox="Obvodka",espName="Imya",espHP="HP",espDist="Distantsiya",
+    espTracers="Treysery (linii k vragam)",espMax="Maks. distantsiya",
+    fb="Polnaya yarkost",crossOn="Pritsel (Crosshair)",crossSz="Razmer pritsela",
+    wsOn="WalkSpeed",wsVal="Znachenie",jpOn="JumpPower",jpVal="Znachenie",
+    nf="Bez urona",ij="Besk. pryzhok",nc="NoClip",bhop="Bunny Hop (avto-pryzhki)",
+    flyOn="Polyot",flySp="Skorost",
+    gRap="Rapid Fire",gAuto="Auto Fire",gSpd="Skorost (ms)",gTest="Test",
+    wmOn="Watermark (brend na ekrane)",
+    tpSec="TELEPORT",
+    save="Sokhranit nastroyki",unload="Vygruzit",rejoin="Perezayti"
 } or {
     tabs={"Combat","Gun","Visual","Move","Extra","Info"},
     aimOn="Aimbot",aMode="Mode",aPart="Part",aFOV="FOV",aSmooth="Smooth",aPred="Prediction",
     aFovC="FOV Circle",aTeam="Team Check",silOn="Silent Aim",silPart="Silent Part",
-    trigOn="Trigger Bot (auto fire on enemy)",trigDelay="Delay (ms)",
+    trigOn="Trigger Bot (auto fire)",
     hbOn="Head Hitbox",hbSz="Size",hbVis="Red overlay",
     espOn="Enable ESP",espBox="Highlight",espName="Name",espHP="HP Bar",espDist="Distance",
     espTracers="Tracers (lines to enemies)",espMax="Max Distance",
@@ -961,9 +940,9 @@ local L=Lang=="ru" and {
     nf="No Fall Damage",ij="Inf Jump",nc="Noclip",bhop="Bunny Hop (auto jump)",
     flyOn="Fly",flySp="Speed",
     gRap="Rapid Fire",gAuto="Auto Fire",gSpd="Speed (ms)",gTest="Test Fire",
-    wmOn="Watermark (brand on screen)",
-    tpSec="TELEPORT",tpPlayer="Teleport to player ▼",
-    save="💾 Save Settings",unload="Unload",rejoin="Rejoin"
+    wmOn="Watermark",
+    tpSec="TELEPORT",
+    save="Save Settings",unload="Unload",rejoin="Rejoin"
 }
 
 local MenuGui=Instance.new("ScreenGui",GetRoot())
@@ -1078,7 +1057,6 @@ local function Btn(text,col,cb)
     b.MouseButton1Click:Connect(cb); Y=Y+37
 end
 
--- СТРАНИЦЫ
 local Pages={}
 
 Pages.Combat=function()
@@ -1107,7 +1085,7 @@ Pages.Gun=function()
     Tog(L.gRap,C.Gun.RapidFire,function(v) C.Gun.RapidFire=v; if not v then StopRapid() end end)
     Tog(L.gAuto,C.Gun.AutoFire,function(v) C.Gun.AutoFire=v; if not v then StopRapid() end end)
     Sld(L.gSpd,10,200,C.Gun.RapidSpeed,function(v) C.Gun.RapidSpeed=v end)
-    Btn("▶ "..L.gTest,TH.item,DoFire)
+    Btn(L.gTest,TH.item,DoFire)
 end
 
 Pages.Visual=function()
@@ -1151,11 +1129,10 @@ end
 
 Pages.Extra=function()
     Sec(L.tpSec)
-    -- Список игроков для телепорта
     for i=1,#PCache do
         local plr = PCache[i]
         if plr and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-            Btn("📍 "..plr.DisplayName, C3RGB(20,35,60), function()
+            Btn(plr.DisplayName, C3RGB(20,35,60), function()
                 pcall(function()
                     LP.Character.HumanoidRootPart.CFrame = plr.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
                 end)
@@ -1185,7 +1162,7 @@ Pages.Info=function()
     info.Size=UD2(1,-16,0,160); info.Position=UD2(0,8,0,Y)
     info.BackgroundColor3=C3RGB(13,11,26); info.BorderSizePixel=0
     Instance.new("UICorner",info).CornerRadius=UDim.new(0,7)
-    info.Text="ULTRA BETA 2026 — PREMIUM v5\nSkilerBost Edition\n\nNEW:\n🎯 Trigger Bot (auto shoot)\n🐰 Bunny Hop\n📌 Crosshair\n📍 Teleport to Player\n📏 Tracers\n💾 Save Settings\n💧 Watermark + FPS\n\nRightShift = menu"
+    info.Text="ULTRA BETA 2026 PREMIUM v6\nSkilerBost Edition\n\nFIXED + NEW:\n- Trigger Bot (auto shoot)\n- Bunny Hop\n- Crosshair\n- Teleport to Player\n- Tracers\n- Save Settings\n- Watermark + FPS\n\nRightShift = menu"
     info.TextColor3=TH.dim; info.TextSize=11; info.Font=Enum.Font.Gotham
     info.TextWrapped=true; info.TextYAlignment=Enum.TextYAlignment.Top
     Y=Y+165
@@ -1211,11 +1188,9 @@ end
 RC(); Pages.Combat(); SC()
 task.spawn(function() while MenuGui.Parent do Win.Visible=C.MenuOpen; task.wait(0.15) end end)
 
--- Автосохранение каждые 60 сек
 task.spawn(function()
     while task.wait(60) do SaveConfig() end
 end)
 
-print("[ULTRA BETA 2026] PREMIUM v5 Loaded!")
-print("[ULTRA BETA 2026] NEW: TriggerBot, BHop, Crosshair, Tracers, TP, Save")
+print("[ULTRA BETA 2026] PREMIUM v6 FIXED Loaded!")
 print("[ULTRA BETA 2026] RightShift = menu")
