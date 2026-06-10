@@ -1,5 +1,5 @@
 -- =====================================================
--- ULTRA BETA 2026 — PREMIUM v6 (FIXED)
+-- ULTRA BETA 2026 — PREMIUM v8 FULL
 -- SkilerBost Premium Edition
 -- =====================================================
 
@@ -33,6 +33,8 @@ local C3     = Color3.new
 local C3RGB  = Color3.fromRGB
 local CFLook = CFrame.lookAt
 
+local DISCORD_LINK = "https://discord.gg/7JgX5pfjSm"
+
 repeat task.wait() until LP:FindFirstChild("PlayerGui")
 
 local function GetRoot()
@@ -49,7 +51,7 @@ local HasClick = pcall(function() return mouse1click end)
 local HasHook  = pcall(function() return hookmetamethod end) and typeof(hookmetamethod) == "function"
 local HasNewCC = pcall(function() return newcclosure end)
 
--- ════ КОНФИГ (СОЗДАЁМ ПЕРВЫМ!) ════
+-- ════ КОНФИГ ════
 local C = {
     Aim     = {On=false,Part="Head",FOV=200,Smooth=6,Team=false,Mode="Hold",Pred=0.12,ShowFOV=true},
     Silent  = {On=false,Part="Head"},
@@ -84,19 +86,13 @@ if DrawOK then
     end)
 end
 
--- ════ CROSSHAIR ════
 local CrossH, CrossV = nil, nil
 if DrawOK then
     pcall(function()
         CrossH = Drawing.new("Line")
-        CrossH.Color = C3RGB(255,50,50)
-        CrossH.Thickness = 1.5
-        CrossH.Visible = false
-
+        CrossH.Color = C3RGB(255,50,50); CrossH.Thickness = 1.5; CrossH.Visible = false
         CrossV = Drawing.new("Line")
-        CrossV.Color = C3RGB(255,50,50)
-        CrossV.Thickness = 1.5
-        CrossV.Visible = false
+        CrossV.Color = C3RGB(255,50,50); CrossV.Thickness = 1.5; CrossV.Visible = false
     end)
 end
 
@@ -159,7 +155,7 @@ SubLbl.TextSize = 15
 SubLbl.Font = Enum.Font.GothamMedium
 
 local Calcs = {
-    "0xDEADC0DE","sum(n)","integral","lim infinity","Delta t=0.016",
+    "0xDEADC0DE","sum(n)","integral","lim infinity","Delta t",
     "hookmetamethod","getgc()","math.huge","sqrt(256)","sin(pi)",
     "RSA-2048","AES-256","Vector3.new","CFrame.new",
     "FireServer()","Matrix4x4","newcclosure","readfile()",
@@ -240,9 +236,9 @@ task.spawn(function()
 end)
 task.wait(3.6)
 
-TitleLbl.Text = "LANGUAGE"
-TitleLbl.TextSize = 42
-SubLbl.Text = "Russian / English"
+TitleLbl.Text = "ЯЗЫК / LANGUAGE"
+TitleLbl.TextSize = 36
+SubLbl.Text = "Выберите язык / Choose language"
 BarBg.Visible = false
 FactLbl.Visible = false
 R1.Visible = false; R2.Visible = false; R3.Visible = false
@@ -257,8 +253,8 @@ local function MakeLangBtn(text, posX)
     return b
 end
 
-local BtnRu = MakeLangBtn("RU Russian", -205)
-local BtnEn = MakeLangBtn("EN English", 10)
+local BtnRu = MakeLangBtn("Русский", -205)
+local BtnEn = MakeLangBtn("English", 10)
 
 local Lang = nil
 BtnRu.MouseButton1Click:Connect(function() Lang = "ru" end)
@@ -288,7 +284,7 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     KBg.Size=UD2(1,0,1,0); KBg.BackgroundColor3=C3RGB(5,5,15); KBg.BorderSizePixel=0
 
     local Panel = Instance.new("Frame",KBg)
-    Panel.Size=UD2(0,460,0,320); Panel.Position=UD2(0.5,-230,0.5,-160)
+    Panel.Size=UD2(0,460,0,360); Panel.Position=UD2(0.5,-230,0.5,-180)
     Panel.BackgroundColor3=C3RGB(11,11,24); Panel.BorderSizePixel=0
     Instance.new("UICorner",Panel).CornerRadius=UDim.new(0,14)
     Instance.new("UIStroke",Panel).Color=C3RGB(0,150,255)
@@ -301,7 +297,7 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     local D1=Instance.new("TextLabel",Panel)
     D1.Size=UD2(1,-30,0,50); D1.Position=UD2(0,15,0,70)
     D1.BackgroundTransparency=1
-    D1.Text=Lang=="ru" and "Vvedite klyuch\nULTRA-BETA-XXXX-2026" or "Enter key\nULTRA-BETA-XXXX-2026"
+    D1.Text=Lang=="ru" and "Введите лицензионный ключ\nФормат: ULTRA-BETA-XXXX-2026" or "Enter license key\nFormat: ULTRA-BETA-XXXX-2026"
     D1.TextColor3=C3RGB(140,140,170); D1.TextSize=12; D1.Font=Enum.Font.Gotham; D1.TextWrapped=true
 
     local IBox=Instance.new("Frame",Panel)
@@ -320,22 +316,50 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     ABtn.Size=UD2(1,-40,0,42); ABtn.Position=UD2(0,20,0,195)
     ABtn.BackgroundColor3=C3RGB(0,120,255); ABtn.TextColor3=C3(1,1,1)
     ABtn.Font=Enum.Font.GothamBold; ABtn.TextSize=15
-    ABtn.Text=Lang=="ru" and "AKTIVIROVAT" or "ACTIVATE"; ABtn.BorderSizePixel=0
+    ABtn.Text=Lang=="ru" and "АКТИВИРОВАТЬ" or "ACTIVATE"; ABtn.BorderSizePixel=0
     Instance.new("UICorner",ABtn).CornerRadius=UDim.new(0,8)
 
     local Stat=Instance.new("TextLabel",Panel)
     Stat.Size=UD2(1,-30,0,22); Stat.Position=UD2(0,15,0,250)
     Stat.BackgroundTransparency=1; Stat.Text=""; Stat.TextSize=12; Stat.Font=Enum.Font.GothamMedium
 
+    -- Discord на окне ключа
+    local DcLbl = Instance.new("TextLabel", Panel)
+    DcLbl.Size = UD2(1,-30,0,18)
+    DcLbl.Position = UD2(0,15,0,290)
+    DcLbl.BackgroundTransparency = 1
+    DcLbl.Text = Lang=="ru" and "Купить ключ - наш Discord:" or "Buy key - our Discord:"
+    DcLbl.TextColor3 = C3RGB(140,140,170)
+    DcLbl.TextSize = 11
+    DcLbl.Font = Enum.Font.GothamMedium
+
+    local DcBtn = Instance.new("TextButton", Panel)
+    DcBtn.Size = UD2(1,-40,0,28)
+    DcBtn.Position = UD2(0,20,0,315)
+    DcBtn.BackgroundColor3 = C3RGB(88,101,242)
+    DcBtn.TextColor3 = C3(1,1,1)
+    DcBtn.Text = DISCORD_LINK
+    DcBtn.Font = Enum.Font.Code
+    DcBtn.TextSize = 12
+    DcBtn.BorderSizePixel = 0
+    Instance.new("UICorner",DcBtn).CornerRadius = UDim.new(0,6)
+    DcBtn.MouseButton1Click:Connect(function()
+        pcall(function() setclipboard(DISCORD_LINK) end)
+        DcBtn.Text = Lang=="ru" and "Скопировано!" or "Copied!"
+        task.wait(1.5)
+        DcBtn.Text = DISCORD_LINK
+    end)
+
     local Ok=false
     ABtn.MouseButton1Click:Connect(function()
         local k=IField.Text:gsub("%s+",""):upper()
         if ValidKeys[k] then
-            Stat.Text="OK"; Stat.TextColor3=C3RGB(0,255,100)
+            Stat.Text=Lang=="ru" and "Ключ принят" or "Key accepted"
+            Stat.TextColor3=C3RGB(0,255,100)
             pcall(function() if writefile then writefile(KeyFile,k) end end)
             task.wait(0.6); Ok=true
         else
-            Stat.Text=Lang=="ru" and "Nevernyy klyuch" or "Invalid key"
+            Stat.Text=Lang=="ru" and "Неверный ключ" or "Invalid key"
             Stat.TextColor3=C3RGB(255,80,80)
         end
     end)
@@ -344,14 +368,13 @@ if not (SavedKey and ValidKeys[SavedKey]) then
     KGui:Destroy()
 end
 
--- ════ АНТИДЕТЕКТ + SILENT AIM (С ЗАЩИТОЙ ОТ ОШИБОК) ════
+-- ════ АНТИДЕТЕКТ ════
 if HasHook then
     pcall(function()
         local wrap = HasNewCC and newcclosure or function(f) return f end
 
         local OldIndex
         OldIndex = hookmetamethod(game,"__index",wrap(function(self,key)
-            -- ВАЖНО: проверяем что C существует
             if C and C.Silent and C.Silent.On and SilentTarget and SilentTarget.Parent and self == Mouse then
                 if key == "Hit" then return SilentTarget.CFrame end
                 if key == "Target" then return SilentTarget end
@@ -426,7 +449,6 @@ local function RebuildCache()
 end
 RebuildCache()
 
--- ════ HELPERS ════
 local function GetPart(char, partName)
     if not char then return nil end
     local p = char:FindFirstChild(partName)
@@ -679,6 +701,144 @@ task.spawn(function()
     end
 end)
 
+-- ════ DISCORD УВЕДОМЛЕНИЕ ════
+local function ShowDiscordNotif()
+    local NotifGui = Instance.new("ScreenGui", GetRoot())
+    NotifGui.Name = "ULTRA_Discord"
+    NotifGui.IgnoreGuiInset = true
+    NotifGui.DisplayOrder = 10001
+    NotifGui.ResetOnSpawn = false
+
+    local Notif = Instance.new("Frame", NotifGui)
+    Notif.Size = UD2(0, 340, 0, 140)
+    Notif.Position = UD2(1, 360, 1, -170)
+    Notif.BackgroundColor3 = C3RGB(12, 12, 22)
+    Notif.BorderSizePixel = 0
+    Instance.new("UICorner", Notif).CornerRadius = UDim.new(0, 12)
+    local NS = Instance.new("UIStroke", Notif)
+    NS.Color = C3RGB(88, 101, 242)
+    NS.Thickness = 2
+
+    task.spawn(function()
+        local cols = {C3RGB(88,101,242), C3RGB(130,80,255), C3RGB(0,200,255), C3RGB(88,101,242)}
+        local i = 1
+        while NotifGui.Parent do
+            TweenService:Create(NS, TweenInfo.new(1.5, Enum.EasingStyle.Sine), {Color=cols[i]}):Play()
+            i = i % #cols + 1
+            task.wait(1.5)
+        end
+    end)
+
+    local Icon = Instance.new("TextLabel", Notif)
+    Icon.Size = UD2(0, 50, 0, 50)
+    Icon.Position = UD2(0, 12, 0, 12)
+    Icon.BackgroundColor3 = C3RGB(88, 101, 242)
+    Icon.Text = "DC"
+    Icon.TextColor3 = C3(1, 1, 1)
+    Icon.TextSize = 18
+    Icon.Font = Enum.Font.GothamBlack
+    Icon.BorderSizePixel = 0
+    Instance.new("UICorner", Icon).CornerRadius = UDim.new(0, 10)
+
+    local Title = Instance.new("TextLabel", Notif)
+    Title.Size = UD2(1, -75, 0, 22)
+    Title.Position = UD2(0, 72, 0, 14)
+    Title.BackgroundTransparency = 1
+    Title.Text = Lang == "ru" and "Присоединяйся к Discord!" or "Join our Discord!"
+    Title.TextColor3 = C3RGB(88, 101, 242)
+    Title.TextSize = 15
+    Title.Font = Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local Desc = Instance.new("TextLabel", Notif)
+    Desc.Size = UD2(1, -75, 0, 20)
+    Desc.Position = UD2(0, 72, 0, 36)
+    Desc.BackgroundTransparency = 1
+    Desc.Text = "ULTRA BETA  -  SkilerBost"
+    Desc.TextColor3 = C3RGB(160, 160, 180)
+    Desc.TextSize = 11
+    Desc.Font = Enum.Font.Gotham
+    Desc.TextXAlignment = Enum.TextXAlignment.Left
+
+    local Link = Instance.new("TextLabel", Notif)
+    Link.Size = UD2(1, -24, 0, 20)
+    Link.Position = UD2(0, 12, 0, 72)
+    Link.BackgroundColor3 = C3RGB(20, 20, 35)
+    Link.Text = "  " .. DISCORD_LINK
+    Link.TextColor3 = C3RGB(100, 180, 255)
+    Link.TextSize = 11
+    Link.Font = Enum.Font.Code
+    Link.TextXAlignment = Enum.TextXAlignment.Left
+    Link.BorderSizePixel = 0
+    Instance.new("UICorner", Link).CornerRadius = UDim.new(0, 5)
+
+    local CopyBtn = Instance.new("TextButton", Notif)
+    CopyBtn.Size = UD2(0.48, -16, 0, 28)
+    CopyBtn.Position = UD2(0, 12, 1, -38)
+    CopyBtn.BackgroundColor3 = C3RGB(88, 101, 242)
+    CopyBtn.TextColor3 = C3(1, 1, 1)
+    CopyBtn.Text = Lang == "ru" and "Копировать ссылку" or "Copy Link"
+    CopyBtn.Font = Enum.Font.GothamBold
+    CopyBtn.TextSize = 11
+    CopyBtn.BorderSizePixel = 0
+    Instance.new("UICorner", CopyBtn).CornerRadius = UDim.new(0, 6)
+
+    CopyBtn.MouseButton1Click:Connect(function()
+        local ok = pcall(function() setclipboard(DISCORD_LINK) end)
+        if ok then
+            CopyBtn.Text = Lang == "ru" and "Скопировано!" or "Copied!"
+            CopyBtn.BackgroundColor3 = C3RGB(0, 180, 100)
+        else
+            CopyBtn.Text = Lang == "ru" and "Ошибка" or "Error"
+            CopyBtn.BackgroundColor3 = C3RGB(180, 50, 50)
+        end
+        task.wait(2)
+        if CopyBtn.Parent then
+            CopyBtn.Text = Lang == "ru" and "Копировать ссылку" or "Copy Link"
+            CopyBtn.BackgroundColor3 = C3RGB(88, 101, 242)
+        end
+    end)
+
+    local CloseB = Instance.new("TextButton", Notif)
+    CloseB.Size = UD2(0.48, -16, 0, 28)
+    CloseB.Position = UD2(0.52, 4, 1, -38)
+    CloseB.BackgroundColor3 = C3RGB(45, 45, 65)
+    CloseB.TextColor3 = C3(1, 1, 1)
+    CloseB.Text = Lang == "ru" and "Закрыть" or "Close"
+    CloseB.Font = Enum.Font.GothamMedium
+    CloseB.TextSize = 11
+    CloseB.BorderSizePixel = 0
+    Instance.new("UICorner", CloseB).CornerRadius = UDim.new(0, 6)
+
+    TweenService:Create(Notif, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Position = UD2(1, -350, 1, -170)
+    }):Play()
+
+    local function CloseNotif()
+        TweenService:Create(Notif, TweenInfo.new(0.4, Enum.EasingStyle.Quad), {
+            Position = UD2(1, 360, 1, -170)
+        }):Play()
+        task.wait(0.5)
+        NotifGui:Destroy()
+    end
+
+    CloseB.MouseButton1Click:Connect(CloseNotif)
+
+    task.delay(15, function()
+        if NotifGui.Parent then CloseNotif() end
+    end)
+end
+
+-- Показываем сразу через 3 сек
+task.delay(3, function() ShowDiscordNotif() end)
+
+-- Повтор каждые 5 минут
+task.spawn(function()
+    while task.wait(300) do
+        ShowDiscordNotif()
+    end
+end)
+
 -- ════ ЦИКЛЫ ════
 local AimActive = false
 local HBTimer, NCTimer, TrigTimer = 0, 0, 0
@@ -732,7 +892,6 @@ RunService.Heartbeat:Connect(function(dt)
         end
     end
 
-    -- Trigger Bot
     if C.Trigger.On then
         TrigTimer = TrigTimer + dt
         if TrigTimer > (C.Trigger.Delay/1000) then
@@ -911,38 +1070,67 @@ local TH={
     slBg=C3RGB(22,22,44),slFg=C3RGB(0,170,255),sec=C3RGB(0,170,255)
 }
 
-local L=Lang=="ru" and {
-    tabs={"Boevoy","Oruzhie","Vizual","Dvizhenie","Dop","Info"},
-    aimOn="Aimbot",aMode="Rezhim",aPart="Chast",aFOV="FOV",aSmooth="Plavnost",aPred="Predskazanie",
-    aFovC="Krug FOV",aTeam="Komanda",silOn="Silent Aim",silPart="Chast Silent",
-    trigOn="Trigger Bot (avto-strelba)",
-    hbOn="Khitboks golovy",hbSz="Razmer",hbVis="Krasnyy",
-    espOn="Vklyuchit ESP",espBox="Obvodka",espName="Imya",espHP="HP",espDist="Distantsiya",
-    espTracers="Treysery (linii k vragam)",espMax="Maks. distantsiya",
-    fb="Polnaya yarkost",crossOn="Pritsel (Crosshair)",crossSz="Razmer pritsela",
-    wsOn="WalkSpeed",wsVal="Znachenie",jpOn="JumpPower",jpVal="Znachenie",
-    nf="Bez urona",ij="Besk. pryzhok",nc="NoClip",bhop="Bunny Hop (avto-pryzhki)",
-    flyOn="Polyot",flySp="Skorost",
-    gRap="Rapid Fire",gAuto="Auto Fire",gSpd="Skorost (ms)",gTest="Test",
-    wmOn="Watermark (brend na ekrane)",
-    tpSec="TELEPORT",
-    save="Sokhranit nastroyki",unload="Vygruzit",rejoin="Perezayti"
+local L = Lang == "ru" and {
+    tabs = {"Боевой","Оружие","Визуал","Движение","Игроки","Инфо"},
+    aimOn="Аимбот", aMode="Режим", aPart="Часть тела", aFOV="Радиус FOV",
+    aSmooth="Плавность", aPred="Предсказание", aFovC="Показывать круг FOV",
+    aTeam="Не наводить на команду",
+    silOn="Silent Aim (пуля сразу в цель)", silPart="Часть тела (Silent)",
+    trigOn="Trigger Bot (авто-стрельба)",
+    hbOn="Большая голова (Hitbox)", hbSz="Размер головы",
+    hbVis="Показывать красным",
+    espOn="Включить ESP", espBox="Обводка игроков", espName="Имя",
+    espHP="Полоска здоровья", espDist="Дистанция в метрах",
+    espTracers="Линии до врагов (Tracers)",
+    espMax="Максимальная дистанция",
+    fb="Полная яркость", crossOn="Прицел (Crosshair)",
+    crossSz="Размер прицела",
+    wsOn="Скорость ходьбы", wsVal="Значение скорости",
+    jpOn="Сила прыжка", jpVal="Значение прыжка",
+    nf="Без урона от падения", ij="Бесконечный прыжок",
+    nc="Проходить сквозь стены (NoClip)",
+    bhop="Bunny Hop (авто-прыжки)",
+    flyOn="Включить полёт", flySp="Скорость полёта",
+    gRap="Rapid Fire (быстрая стрельба)",
+    gAuto="Auto Fire (зажми ЛКМ)",
+    gSpd="Скорость стрельбы (мс)", gTest="Тест выстрела",
+    wmOn="Водяной знак (бренд + FPS)",
+    tpSec="ТЕЛЕПОРТ К ИГРОКАМ",
+    refresh="Обновить список игроков",
+    noPlayers="В игре нет других игроков",
+    discordBtn="Открыть Discord",
+    save="Сохранить настройки",
+    unload="Выгрузить чит", rejoin="Перезайти на сервер"
 } or {
-    tabs={"Combat","Gun","Visual","Move","Extra","Info"},
-    aimOn="Aimbot",aMode="Mode",aPart="Part",aFOV="FOV",aSmooth="Smooth",aPred="Prediction",
-    aFovC="FOV Circle",aTeam="Team Check",silOn="Silent Aim",silPart="Silent Part",
+    tabs = {"Combat","Gun","Visual","Move","Players","Info"},
+    aimOn="Aimbot", aMode="Mode", aPart="Body Part", aFOV="FOV Radius",
+    aSmooth="Smoothness", aPred="Prediction", aFovC="Show FOV Circle",
+    aTeam="Team Check (skip teammates)",
+    silOn="Silent Aim (bullet to target)", silPart="Silent Part",
     trigOn="Trigger Bot (auto fire)",
-    hbOn="Head Hitbox",hbSz="Size",hbVis="Red overlay",
-    espOn="Enable ESP",espBox="Highlight",espName="Name",espHP="HP Bar",espDist="Distance",
-    espTracers="Tracers (lines to enemies)",espMax="Max Distance",
-    fb="FullBright",crossOn="Crosshair",crossSz="Crosshair Size",
-    wsOn="WalkSpeed",wsVal="Value",jpOn="JumpPower",jpVal="Value",
-    nf="No Fall Damage",ij="Inf Jump",nc="Noclip",bhop="Bunny Hop (auto jump)",
-    flyOn="Fly",flySp="Speed",
-    gRap="Rapid Fire",gAuto="Auto Fire",gSpd="Speed (ms)",gTest="Test Fire",
-    wmOn="Watermark",
-    tpSec="TELEPORT",
-    save="Save Settings",unload="Unload",rejoin="Rejoin"
+    hbOn="Big Head (Hitbox)", hbSz="Head Size",
+    hbVis="Show red overlay",
+    espOn="Enable ESP", espBox="Player Highlight", espName="Name",
+    espHP="Health Bar", espDist="Distance",
+    espTracers="Tracers (lines to enemies)",
+    espMax="Max Distance",
+    fb="FullBright", crossOn="Crosshair",
+    crossSz="Crosshair Size",
+    wsOn="WalkSpeed", wsVal="Speed Value",
+    jpOn="JumpPower", jpVal="Jump Value",
+    nf="No Fall Damage", ij="Infinite Jump",
+    nc="Noclip (walk through walls)",
+    bhop="Bunny Hop (auto jump)",
+    flyOn="Enable Fly", flySp="Fly Speed",
+    gRap="Rapid Fire", gAuto="Auto Fire (hold LMB)",
+    gSpd="Fire Speed (ms)", gTest="Test Fire",
+    wmOn="Watermark (brand + FPS)",
+    tpSec="TELEPORT TO PLAYERS",
+    refresh="Refresh players list",
+    noPlayers="No other players in game",
+    discordBtn="Open Discord",
+    save="Save Settings",
+    unload="Unload Cheat", rejoin="Rejoin Server"
 }
 
 local MenuGui=Instance.new("ScreenGui",GetRoot())
@@ -1057,7 +1245,18 @@ local function Btn(text,col,cb)
     b.MouseButton1Click:Connect(cb); Y=Y+37
 end
 
+local function Lbl(text, color)
+    local l = Instance.new("TextLabel", Content)
+    l.Size = UD2(1,-16,0,28); l.Position = UD2(0,8,0,Y)
+    l.BackgroundTransparency = 1
+    l.Text = text; l.TextColor3 = color or TH.dim
+    l.TextSize = 12; l.Font = Enum.Font.GothamMedium
+    l.TextWrapped = true
+    Y = Y + 30
+end
+
 local Pages={}
+local CurrentPage = "Combat"
 
 Pages.Combat=function()
     Sec("AIMBOT")
@@ -1112,12 +1311,12 @@ Pages.Visual=function()
 end
 
 Pages.Move=function()
-    Sec("SPEED")
+    Sec(Lang=="ru" and "СКОРОСТЬ И ПРЫЖОК" or "SPEED AND JUMP")
     Tog(L.wsOn,C.WS.On,function(v) C.WS.On=v end)
     Sld(L.wsVal,16,200,C.WS.Val,function(v) C.WS.Val=v end)
     Tog(L.jpOn,C.JP.On,function(v) C.JP.On=v end)
     Sld(L.jpVal,50,300,C.JP.Val,function(v) C.JP.Val=v end)
-    Sec("MISC")
+    Sec(Lang=="ru" and "ПРОЧЕЕ" or "MISC")
     Tog(L.nf,C.NF,function(v) C.NF=v end)
     Tog(L.ij,C.IJ,function(v) C.IJ=v end)
     Tog(L.nc,C.NC,function(v) C.NC=v end)
@@ -1127,23 +1326,66 @@ Pages.Move=function()
     Sld(L.flySp,10,300,C.Fly.Sp,function(v) C.Fly.Sp=v end)
 end
 
-Pages.Extra=function()
-    Sec(L.tpSec)
-    for i=1,#PCache do
-        local plr = PCache[i]
-        if plr and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-            Btn(plr.DisplayName, C3RGB(20,35,60), function()
-                pcall(function()
-                    LP.Character.HumanoidRootPart.CFrame = plr.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
-                end)
-            end)
+Pages.Players = function()
+    local success, err = pcall(function()
+        Sec(L.tpSec)
+        RebuildCache()
+
+        Btn(L.refresh, C3RGB(30,60,30), function()
+            RebuildCache()
+            RC()
+            if Pages.Players then Pages.Players() end
+            SC()
+        end)
+
+        local count = 0
+        for i = 1, #PCache do
+            local plr = PCache[i]
+            if plr and plr.Parent and plr.Character then
+                local hrp = plr.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    count = count + 1
+                    local plrRef = plr
+                    Btn(plr.DisplayName .. "  (@" .. plr.Name .. ")", C3RGB(20,35,60), function()
+                        pcall(function()
+                            if LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then
+                                if plrRef and plrRef.Character and plrRef.Character:FindFirstChild("HumanoidRootPart") then
+                                    LP.Character.HumanoidRootPart.CFrame =
+                                        plrRef.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+                                end
+                            end
+                        end)
+                    end)
+                end
+            end
         end
+
+        if count == 0 then
+            Lbl(L.noPlayers, C3RGB(255,180,0))
+        end
+
+        Sec("DISPLAY")
+        Tog(L.wmOn, C.WM.On, function(v) C.WM.On = v end)
+    end)
+
+    if not success then
+        Sec("ERROR")
+        Lbl("Error: " .. tostring(err), C3RGB(255,80,80))
+        Btn(L.refresh, C3RGB(60,30,30), function()
+            RC()
+            if Pages.Players then Pages.Players() end
+            SC()
+        end)
     end
-    Sec("DISPLAY")
-    Tog(L.wmOn,C.WM.On,function(v) C.WM.On=v end)
 end
 
 Pages.Info=function()
+    Sec("DISCORD")
+    Btn(L.discordBtn .. "  -  " .. DISCORD_LINK, C3RGB(88,101,242), function()
+        local ok = pcall(function() setclipboard(DISCORD_LINK) end)
+        ShowDiscordNotif()
+    end)
+
     Sec("ACTIONS")
     Btn(L.save,C3RGB(18,60,38),function() SaveConfig() end)
     Btn(L.rejoin,C3RGB(18,38,75),function() TeleportService:Teleport(game.PlaceId,LP) end)
@@ -1157,18 +1399,22 @@ Pages.Info=function()
         SilentTarget=nil; WMGui:Destroy(); MenuGui:Destroy()
         getgenv().ULTRA_BETA_LOADED=nil
     end)
+
     Sec("INFO")
     local info=Instance.new("TextLabel",Content)
-    info.Size=UD2(1,-16,0,160); info.Position=UD2(0,8,0,Y)
+    info.Size=UD2(1,-16,0,180); info.Position=UD2(0,8,0,Y)
     info.BackgroundColor3=C3RGB(13,11,26); info.BorderSizePixel=0
     Instance.new("UICorner",info).CornerRadius=UDim.new(0,7)
-    info.Text="ULTRA BETA 2026 PREMIUM v6\nSkilerBost Edition\n\nFIXED + NEW:\n- Trigger Bot (auto shoot)\n- Bunny Hop\n- Crosshair\n- Teleport to Player\n- Tracers\n- Save Settings\n- Watermark + FPS\n\nRightShift = menu"
+    info.Text = Lang == "ru" and
+        "ULTRA BETA 2026 - PREMIUM v8\nSkilerBost Edition\n\nФУНКЦИИ:\n- Trigger Bot (авто-стрельба)\n- Bunny Hop (авто-прыжки)\n- Crosshair (прицел)\n- Telepport (телепорт к игрокам)\n- Tracers (линии)\n- Save Settings (сохранение)\n- Watermark + FPS\n- Discord уведомления\n\nRightShift = открыть/закрыть меню" or
+        "ULTRA BETA 2026 - PREMIUM v8\nSkilerBost Edition\n\nFEATURES:\n- Trigger Bot\n- Bunny Hop\n- Crosshair\n- Teleport to Players\n- Tracers\n- Save Settings\n- Watermark + FPS\n- Discord notifications\n\nRightShift = toggle menu"
     info.TextColor3=TH.dim; info.TextSize=11; info.Font=Enum.Font.Gotham
     info.TextWrapped=true; info.TextYAlignment=Enum.TextYAlignment.Top
-    Y=Y+165
+    info.TextXAlignment=Enum.TextXAlignment.Left
+    Y=Y+185
 end
 
-local PageKeys={"Combat","Gun","Visual","Move","Extra","Info"}
+local PageKeys={"Combat","Gun","Visual","Move","Players","Info"}
 local TabBtns={}
 
 for i,k in ipairs(PageKeys) do
@@ -1178,19 +1424,30 @@ for i,k in ipairs(PageKeys) do
     tb.Font=Enum.Font.GothamMedium; tb.Text=L.tabs[i]; tb.BorderSizePixel=0; tb.LayoutOrder=i
     TabBtns[k]=tb
     tb.MouseButton1Click:Connect(function()
+        CurrentPage = k
         for n,b in pairs(TabBtns) do
             b.BackgroundColor3=n==k and TH.accent or C3RGB(10,10,20)
             b.BackgroundTransparency=n==k and 0 or 0.4
-        end; RC(); if Pages[k] then Pages[k]() end; SC()
+        end
+        RC()
+        local ok, err = pcall(function()
+            if Pages[k] then Pages[k]() end
+        end)
+        if not ok then
+            Lbl("Page error: " .. tostring(err), C3RGB(255,80,80))
+        end
+        SC()
     end)
 end
 
 RC(); Pages.Combat(); SC()
+
 task.spawn(function() while MenuGui.Parent do Win.Visible=C.MenuOpen; task.wait(0.15) end end)
 
 task.spawn(function()
     while task.wait(60) do SaveConfig() end
 end)
 
-print("[ULTRA BETA 2026] PREMIUM v6 FIXED Loaded!")
+print("[ULTRA BETA 2026] v8 FULL Loaded!")
+print("[ULTRA BETA 2026] Discord: " .. DISCORD_LINK)
 print("[ULTRA BETA 2026] RightShift = menu")
